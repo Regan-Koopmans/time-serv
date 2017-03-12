@@ -1,1 +1,1 @@
-web: ./target/release/practical_3 $PORT
+worker: ./target/release/practical_3 $PORT
