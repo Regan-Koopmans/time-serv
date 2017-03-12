@@ -74,7 +74,7 @@ fn read_request(stream: TcpStream) {
             if line_array[0] == "GET" {
 
                 // highlight to show the get requests.
-                // println!("\x1B[1;33m{}\x1B[0m", line);
+                println!("\x1B[1;33m{}\x1B[0m", line);
 
                 // respnse contains the tuple of the form (content, file?)
 
@@ -100,7 +100,7 @@ fn read_request(stream: TcpStream) {
 
 fn write_response(mut stream: TcpStream, input:&str, is_file: bool) {
     match is_file {
-        true => stream.write("hi".as_bytes()).unwrap(),
+        true => stream.write_all("hi".as_bytes()).unwrap(),
         false => stream.write(get_template(input).as_bytes()).unwrap(),
     };
     stream.flush().expect("Could not flush stream!");
@@ -113,9 +113,7 @@ fn get_template(input: &str) -> String {
         input = input.replace("x-","");
         is_xml = true;
     }
-
     let date_format = "%H:%M:%S";
-
     let result = match input.as_str() {
         "za" => Local::now().format(date_format).to_string(),
         _ => "not implemented".to_string()
