@@ -39,7 +39,7 @@ fn main() {
 
 fn get_file_string(file_name : &str) -> String {
     let path = Path::new(&file_name);
-    let path_string = path.display();
+    // let path_string = path.display();
     let mut file = match File::open(&path) {
         Err(error) => panic!("Could not open {}, {}",
                                 file_name,error.description()),
@@ -54,7 +54,14 @@ fn get_file_string(file_name : &str) -> String {
     return_string.push_str("Content-Length: ");
     return_string.push_str(&(file_string.len()).to_string());
     return_string.push_str("\n");
-    return_string.push_str("Connection: Closed\n\n");
+    let mut content_type = "Content-Type: text/plain";
+    if file_name.contains(".html") {
+        content_type = "Content-Type: text/html\n";
+    } else if file_name.contains(".css") {
+        content_type = "Content-Type: text/css\n";
+    }
+    return_string.push_str(content_type);
+    return_string.push_str("Connection: close\n\n");
     return_string.push_str(&file_string);
     return_string
 }
@@ -134,5 +141,16 @@ fn get_template(input: &str) -> String {
     } else {
         template = result;
     }
-    template
+    let mut return_string = String::new();
+    return_string.push_str("HTTP/1.1 200 OK\n");
+    return_string.push_str("Content-Length: ");
+    return_string.push_str(&(template.len()).to_string());
+    return_string.push_str("\n");
+    match is_xml {
+        true => return_string.push_str("Content-Type: text/plain\n"),
+        false => return_string.push_str("Content-Type: text/html\n"),
+    }
+    return_string.push_str("Connection: close\n\n");
+    return_string.push_str(&template);
+    return_string
 }
