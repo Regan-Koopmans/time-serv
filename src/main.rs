@@ -99,10 +99,11 @@ fn read_request(stream: TcpStream) {
 }
 
 fn write_response(mut stream: TcpStream, input:&str, is_file: bool) {
-    match is_file {
-        true => stream.write_all("hi".as_bytes()).unwrap(),
-        false => stream.write(get_template(input).as_bytes()).unwrap(),
-    };
+    if is_file {
+        stream.write_all("hi".as_bytes()).unwrap();
+    } else {
+        stream.write(get_template(input).as_bytes()).unwrap();
+    }
     stream.flush().expect("Could not flush stream!");
 }
 
