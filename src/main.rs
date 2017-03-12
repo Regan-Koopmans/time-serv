@@ -61,7 +61,7 @@ fn get_file_string(file_name : &str) -> String {
 fn read_request(stream: TcpStream) {
     let mut response = ("", true);
     let mut reader = BufReader::new(stream);
-    println!("\n\n\x1B[1;32mNEW TCP STREAM\x1B[0m\n");
+    // println!("\n\n\x1B[1;32mNEW TCP STREAM\x1B[0m\n");
     for line in reader.by_ref().lines() {
         let line = line.unwrap();
         if line == "" {
@@ -74,7 +74,7 @@ fn read_request(stream: TcpStream) {
             if line_array[0] == "GET" {
 
                 // highlight to show the get requests.
-                println!("\x1B[1;33m{}\x1B[0m", line);
+                // println!("\x1B[1;33m{}\x1B[0m", line);
 
                 // respnse contains the tuple of the form (content, file?)
 
@@ -88,7 +88,7 @@ fn read_request(stream: TcpStream) {
                     _           => ("static/html/404.html",     true),
                 }
             } else {
-                println!("{}", line);
+                // println!("{}", line);
             }
         }
     }
