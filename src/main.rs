@@ -22,11 +22,11 @@ use std::env;
 
 fn main() {
     let mut domain = String::new();
-    domain.push_str("localhost:");
+    domain.push_str("0.0.0.0:");
     domain.push_str(env::args().nth(1).unwrap().as_str());
 
     let listener = TcpListener::bind(domain.as_str()).unwrap();
-    
+
     println!("Server listening on {}...", domain);
     println!("Press Ctrl-C to exit.");
     for stream in listener.incoming() {
