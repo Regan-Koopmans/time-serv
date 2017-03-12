@@ -37,7 +37,7 @@ fn main() {
     }
 }
 
-fn get_file_string(file_name : &str) -> String {
+fn get_file_string(file_name : &str, add_headers: bool) -> String {
     let path = Path::new(&file_name);
     // let path_string = path.display();
     let mut file = match File::open(&path) {
@@ -50,18 +50,22 @@ fn get_file_string(file_name : &str) -> String {
     let mut return_string = String::new();
 
     // HTTP headers for successful
-    return_string.push_str("HTTP/1.1 200 OK\n");
-    return_string.push_str("Content-Length: ");
-    return_string.push_str(&(file_string.len()).to_string());
-    return_string.push_str("\n");
-    let mut content_type = "Content-Type: text/plain";
-    if file_name.contains(".html") {
-        content_type = "Content-Type: text/html\n";
-    } else if file_name.contains(".css") {
-        content_type = "Content-Type: text/css\n";
+    if add_headers {
+        return_string.push_str("HTTP/1.1 200 OK\n");
+        return_string.push_str("Content-Length: ");
+        return_string.push_str(&(file_string.len()).to_string());
+        return_string.push_str("\n");
+        let mut content_type = "Content-Type: text/plain";
+        if file_name.contains(".html") {
+            content_type = "Content-Type: text/html\n";
+        } else if file_name.contains(".css") {
+            content_type = "Content-Type: text/css\n";
+        } else if file_name.contains(".css") {
+            content_type = "Content-Type: text/javascript\n";
+        }
+        return_string.push_str(content_type);
+        return_string.push_str("Connection: close\n\n");
     }
-    return_string.push_str(content_type);
-    return_string.push_str("Connection: close\n\n");
     return_string.push_str(&file_string);
     return_string
 }
@@ -111,7 +115,7 @@ fn read_request(stream: TcpStream) {
 
 fn write_response(mut stream: TcpStream, input:&str, is_file: bool) {
     if is_file {
-        stream.write_all(get_file_string(input).as_bytes()).unwrap();
+        stream.write_all(get_file_string(input, true).as_bytes()).unwrap();
     } else {
         stream.write(get_template(input).as_bytes()).unwrap();
     }
@@ -135,22 +139,13 @@ fn get_template(input: &str) -> String {
 
     let mut template;
     if !is_xml {
-        template = get_file_string("static/html/template.html");
+        template = get_file_string("static/html/template.html", false);
         template = template.replace("{{country}}", &input);
         template = template.replace("{{time}}", &result);
     } else {
         template = result;
     }
     let mut return_string = String::new();
-    return_string.push_str("HTTP/1.1 200 OK\n");
-    return_string.push_str("Content-Length: ");
-    return_string.push_str(&(template.len()).to_string());
-    return_string.push_str("\n");
-    match is_xml {
-        true => return_string.push_str("Content-Type: text/plain\n"),
-        false => return_string.push_str("Content-Type: text/html\n"),
-    }
-    return_string.push_str("Connection: close\n\n");
     return_string.push_str(&template);
     return_string
 }
