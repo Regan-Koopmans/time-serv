@@ -50,9 +50,12 @@ fn get_file_string(file_name : &str) -> String {
     let mut return_string = String::new();
 
     // HTTP headers for successful
-    return_string.push_str("HTTP/1.1 200 OK\nContent-Type: text/html\n\n");
+    return_string.push_str("HTTP/1.1 200 OK\n");
+    return_string.push_str("Content-Length: ");
+    return_string.push_str(&(file_string.len()*8).to_string());
+    return_string.push_str("\n");
+    return_string.push_str("Connection: Closed\n");
     return_string.push_str(&file_string);
-    return_string.push_str("\n\n");
     return_string
 }
 
