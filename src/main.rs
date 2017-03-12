@@ -50,7 +50,7 @@ fn get_file_string(file_name : &str) -> String {
     let mut return_string = String::new();
 
     // HTTP headers for successful
-    return_string.push_str("HTTP/1.1 200 OK\n\n");
+    return_string.push_str("HTTP/1.1 200 OK\nContent-Type: text/html\n\n");
     return_string.push_str(&file_string);
     return_string
 }
@@ -100,7 +100,7 @@ fn read_request(stream: TcpStream) {
 
 fn write_response(mut stream: TcpStream, input:&str, is_file: bool) {
     if is_file {
-        stream.write_all("hi".as_bytes()).unwrap();
+        stream.write_all(get_file_string(input).as_bytes()).unwrap();
     } else {
         stream.write(get_template(input).as_bytes()).unwrap();
     }
