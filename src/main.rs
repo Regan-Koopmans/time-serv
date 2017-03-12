@@ -52,9 +52,9 @@ fn get_file_string(file_name : &str) -> String {
     // HTTP headers for successful
     return_string.push_str("HTTP/1.1 200 OK\n");
     return_string.push_str("Content-Length: ");
-    return_string.push_str(&(file_string.len()*8).to_string());
+    return_string.push_str(&(file_string.len()).to_string());
     return_string.push_str("\n");
-    return_string.push_str("Connection: Closed\n");
+    return_string.push_str("Connection: Closed\n\n");
     return_string.push_str(&file_string);
     return_string
 }
