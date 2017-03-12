@@ -84,6 +84,7 @@ fn read_request(stream: TcpStream) {
                     "/main.js"  => ("static/js/main.js",        true),
                     "/za"       => ("za",                       false),
                     "/xml/za"   => ("x-za",                     false),
+                    "/favicon.ico" => ("static/html/404.html",     true),
                     _           => ("static/html/404.html",     true),
                 }
             } else {
