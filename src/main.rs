@@ -42,7 +42,7 @@ fn get_file_string(file_name : &str) -> String {
     let path_string = path.display();
     let mut file = match File::open(&path) {
         Err(error) => panic!("Could not open {}, {}",
-                                path_string,error.description()),
+                                file_name,error.description()),
         Ok(file) => file,
     };
     let mut file_string = String::new();
