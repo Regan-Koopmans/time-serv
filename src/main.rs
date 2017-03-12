@@ -16,11 +16,16 @@ use std::path::Path;
 extern crate chrono;
 use chrono::prelude::*;
 
-static DOMAIN : &'static str = "localhost:3000";
+// For env variabls
+
+use std::env;
 
 fn main() {
-    let listener = TcpListener::bind(DOMAIN).unwrap();
-    println!("Server listening on {}...", DOMAIN);
+    let mut domain = String::new();
+    domain.push_str("localhost:");
+    domain.push_str(env::args().nth(1).unwrap().as_str());
+    let listener = TcpListener::bind(domain.as_str()).unwrap();
+    println!("Server listening on {}...", domain);
     println!("Press Ctrl-C to exit.");
     for stream in listener.incoming() {
         thread::spawn(|| {
