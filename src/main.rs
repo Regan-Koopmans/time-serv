@@ -84,7 +84,7 @@ fn read_request(stream: TcpStream) {
                     "/main.js"  => ("static/js/main.js",        true),
                     "/za"       => ("za",                       false),
                     "/xml/za"   => ("x-za",                     false),
-                    "/favicon.ico" => ("static/html/404.html",     true),
+                    "/favicon.ico" => ("static/html/404.html",   true),
                     _           => ("static/html/404.html",     true),
                 }
             } else {
@@ -100,7 +100,7 @@ fn read_request(stream: TcpStream) {
 
 fn write_response(mut stream: TcpStream, input:&str, is_file: bool) {
     match is_file {
-        true => stream.write(get_file_string(input).as_bytes()).unwrap(),
+        true => stream.write("hi".as_bytes()).unwrap(),
         false => stream.write(get_template(input).as_bytes()).unwrap(),
     };
     stream.flush().expect("Could not flush stream!");
