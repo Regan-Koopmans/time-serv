@@ -48,20 +48,20 @@ fn get_file_string(file_name : &str, add_headers: bool) -> String {
 
     // HTTP headers for successful
     if add_headers {
-        return_string.push_str("HTTP/1.1 200 OK\n");
+        return_string.push_str("HTTP/1.1 200 OK\r\n");
         return_string.push_str("Content-Length: ");
         return_string.push_str(&(file_string.len()).to_string());
-        return_string.push_str("\n");
+        return_string.push_str("\r\n");
         let mut content_type = "Content-Type: text/plain";
         if file_name.contains(".html") {
-            content_type = "Content-Type: text/html\n";
+            content_type = "Content-Type: text/html\r\n";
         } else if file_name.contains(".css") {
-            content_type = "Content-Type: text/css\n";
+            content_type = "Content-Type: text/css\r\n";
         } else if file_name.contains(".css") {
-            content_type = "Content-Type: text/javascript\n";
+            content_type = "Content-Type: text/javascript\r\n";
         }
         return_string.push_str(content_type);
-        return_string.push_str("Connection: close\n\n");
+        return_string.push_str("Connection: close\r\n");
     }
     return_string.push_str(&file_string);
     return_string
