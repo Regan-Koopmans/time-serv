@@ -133,13 +133,19 @@ fn get_template(input: &str) -> String {
 
     // get the template file
 
-    let mut template;
+    let mut template = String::new();
     if !is_xml {
         template = get_file_string("static/html/template.html", false);
         template = template.replace("{{country}}", &input);
         template = template.replace("{{time}}", &result);
     } else {
-        template = result;
+        template.push_str("HTTP/1.1 200 OK\r\n");
+        template.push_str("Content-Length: ");
+        template.push_str(&(result.len()).to_string());
+        template.push_str("\r\n");
+        template.push_str("Content-Type: text/plain");
+        template.push_str("Connection: close\r\n\r\n");
+        template.push_str(&result);
     }
     let mut return_string = String::new();
     return_string.push_str(&template);
