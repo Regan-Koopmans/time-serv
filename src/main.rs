@@ -135,7 +135,7 @@ fn get_template(input: &str) -> String {
 
     let mut template = String::new();
     if !is_xml {
-        template = get_file_string("static/html/template.html", false);
+        template = get_file_string("static/html/template.html", true);
         template = template.replace("{{country}}", &input);
         template = template.replace("{{time}}", &result);
     } else {
