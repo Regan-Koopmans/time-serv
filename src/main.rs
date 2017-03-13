@@ -24,9 +24,7 @@ fn main() {
     let mut domain = String::new();
     domain.push_str("0.0.0.0:");
     domain.push_str(env::args().nth(1).unwrap().as_str());
-
     let listener = TcpListener::bind(domain.as_str()).unwrap();
-
     println!("Server listening on {}...", domain);
     println!("Press Ctrl-C to exit.");
     for stream in listener.incoming() {
@@ -39,7 +37,6 @@ fn main() {
 
 fn get_file_string(file_name : &str, add_headers: bool) -> String {
     let path = Path::new(&file_name);
-    // let path_string = path.display();
     let mut file = match File::open(&path) {
         Err(error) => panic!("Could not open {}, {}",
                                 file_name,error.description()),
@@ -85,7 +82,6 @@ fn read_request(stream: TcpStream) {
             let line_array: Vec<&str> = line.split(" ").collect();
 
             // If the first part of the line is 'GET'
-
             if line_array[0] == "GET" {
 
                 // highlight to show the get requests.
@@ -94,13 +90,13 @@ fn read_request(stream: TcpStream) {
                 // respnse contains the tuple of the form (content, file?)
 
                 response = match line_array[1] {
-                    "/"         => ("static/html/main.html",    true),
-                    "/main.css" => ("static/css/main.css",      true),
-                    "/main.js"  => ("static/js/main.js",        true),
-                    "/za"       => ("za",                       false),
-                    "/xml/za"   => ("x-za",                     false),
-                    "/favicon.ico" => ("static/html/404.html",   true),
-                    _           => ("static/html/404.html",     true),
+                    "/"             => ("static/html/main.html",    true),
+                    "/main.css"     => ("static/css/main.css",      true),
+                    "/main.js"      => ("static/js/main.js",        true),
+                    "/za"           => ("za",                       false),
+                    "/xml/za"       => ("x-za",                     false),
+                    "/favicon.ico"  => ("static/html/404.html",     true),
+                    _               => ("static/html/404.html",     true),
                 }
             } else {
                 // println!("{}", line);
