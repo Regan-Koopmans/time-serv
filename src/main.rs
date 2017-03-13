@@ -141,15 +141,13 @@ fn get_template(input: &str) -> String {
         template = get_file_string("static/html/template.html", false);
         template = template.replace("{{country}}", &input);
         template = template.replace("{{time}}", &result);
-        return_string.push_str("Content-Type: text/html\r\n");
     } else {
         
         template = result;
-        return_string.push_str("Content-Type: text/plain\r\n");
     }
     return_string.push_str(&(template.len()).to_string());
     return_string.push_str("\r\n");
-    
+    return_string.push_str("Content-Type: text/html\r\n");
     return_string.push_str("Connection: close\r\n\r\n");
     return_string.push_str(&template);
     return_string
