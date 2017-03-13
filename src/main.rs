@@ -61,7 +61,7 @@ fn get_file_string(file_name : &str, add_headers: bool) -> String {
             content_type = "Content-Type: text/javascript\r\n";
         }
         return_string.push_str(content_type);
-        return_string.push_str("Connection: close\r\n");
+        return_string.push_str("Connection: close\r\n\r\n");
     }
     return_string.push_str(&file_string);
     return_string
