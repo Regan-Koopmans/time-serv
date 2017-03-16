@@ -57,10 +57,11 @@ fn get_file_string(file_name : &str, add_headers: bool) -> String {
             content_type = "Content-Type: text/html\r\n";
         } else if file_name.contains(".css") {
             content_type = "Content-Type: text/css\r\n";
-        } else if file_name.contains(".css") {
+        } else if file_name.contains(".js") {
             content_type = "Content-Type: text/javascript\r\n";
         }
         return_string.push_str(content_type);
+	return_string.push_str("\r\n");
         return_string.push_str("Connection: close\r\n\r\n");
     }
     return_string.push_str(&file_string);
