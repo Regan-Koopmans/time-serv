@@ -72,12 +72,12 @@ fn get_file_string(file_name : &str, add_headers: bool) -> String {
         return_string.push_str("Content-Length: ");
         return_string.push_str(&(file_string.len()).to_string());
         return_string.push_str("\r\n");
-        let mut content_type = "Content-Type: text/plain";
+        let mut content_type = "Content-Type: text/plain\r\n";
         if file_name.contains(".html") {
             content_type = "Content-Type: text/html\r\n";
         } else if file_name.contains(".css") {
             content_type = "Content-Type: text/css\r\n";
-        } else if file_name.contains(".css") {
+        } else if file_name.contains(".js") {
             content_type = "Content-Type: text/javascript\r\n";
         }
         return_string.push_str(content_type);
