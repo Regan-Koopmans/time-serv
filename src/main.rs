@@ -199,7 +199,7 @@ fn get_template(input: &str) -> String {
         "dub"   => (UTC::now() + Duration::hours(4)).format(date_format).to_string(),
         "mosc"  => (UTC::now() + Duration::hours(3)).format(date_format).to_string(),
         "tok"   => (UTC::now() + Duration::hours(9)).format(date_format).to_string(),
-        "mars"  => (UTC::now() - Duration::hours(2) + Duration::minutes(1.02777777778)).format(date_format).to_string(),
+        "mars"  => (UTC::now() - Duration::hours(2) + Duration::minutes(1)).format(date_format).to_string(),
         _ => "not implemented".to_string()
     };
 
