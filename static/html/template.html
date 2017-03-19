@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="main.css">
-    <title>Time in </title>
+    <title>Time in {{title}}</title>
   </head>
-  <h1>Time in {{country}}...</h1>
+  <h1>Time in {{title}}...</h1>
   <body>
     <p id="prompt">The time is currently {{time}}.</p>
     <div class="container">
@@ -13,5 +13,6 @@
       <a href="/">Back</a>
     </div>
   </body>
+  <input id="country" type="hidden" value={{country}} />
   <script type="text/javascript" src="main.js"></script>
 </html>

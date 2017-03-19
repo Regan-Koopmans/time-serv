@@ -1,7 +1,8 @@
 (function () {
   setInterval(function(){
     var xhr = new XMLHttpRequest();
-     xhr.open("GET", "xml/za", true);
+    var request = document.getElementById("country").value;
+     xhr.open("GET", "xml/" + request, true);
      xhr.onload = function (e) {
        var serverResponse = xhr.responseText;
        document.getElementById("prompt").innerHTML =

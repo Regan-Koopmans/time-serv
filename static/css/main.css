@@ -16,7 +16,13 @@ h1 {
 
 a {
   font-family: sans-serif;
-  color: #5D8896
+  color: #5D8896;
+  font-size: 20px;
+}
+
+li {
+  padding-bottom: 10px;
+
 }
 
 #prompt {
