@@ -52,25 +52,31 @@ fn main() {
 // optionally, the function caller can opt to have HTTP headers
 // prepended to this string, using the *add_headers* flag.
 
-fn get_file_string(file_name : &str, add_headers: bool) -> String {
+fn get_file_bytes(file_name : &str, add_headers: bool) -> Vec<u8> {
     let path = Path::new(&file_name);
     let mut file = match File::open(&path) {
         Err(error) => panic!("Could not open {}, {}",
                                 file_name,error.description()),
         Ok(file) => file,
     };
-    let mut file_string = String::new();
-    file.read_to_string(&mut file_string)
+    let mut file_bytes = Vec::new();
+    file.read_to_end(&mut file_bytes)
                                     .expect("Could not read file to string.");
     let mut return_string = String::new();
 
     // HTTP headers for successful, note \r\n is required for both Unix and 
-    // windows support.
+    // windows support. A 404 error is written if writing the 404 page.
 
     if add_headers {
-        return_string.push_str("HTTP/1.1 200 OK\r\n");
+        
+        if file_name != "static/html/404.html" {
+            return_string.push_str("HTTP/1.1 200 OK\r\n");
+        } else {
+            return_string.push_str("HTTP/1.1 404 Not Found\r\n");
+        }
+
         return_string.push_str("Content-Length: ");
-        return_string.push_str(&(file_string.len()).to_string());
+        return_string.push_str(&(file_bytes.len()).to_string());
         return_string.push_str("\r\n");
         let mut content_type = "Content-Type: text/plain\r\n";
         if file_name.contains(".html") {
@@ -79,12 +85,22 @@ fn get_file_string(file_name : &str, add_headers: bool) -> String {
             content_type = "Content-Type: text/css\r\n";
         } else if file_name.contains(".js") {
             content_type = "Content-Type: text/javascript\r\n";
-        }
+        } 
         return_string.push_str(content_type);
+        
+        if file_name.contains(".gz") {
+            return_string.push_str("Content-Encoding: gzip\r\n");
+        }
+
         return_string.push_str("Connection: close\r\n\r\n");
     }
-    return_string.push_str(&file_string);
-    return_string
+    let mut return_vector;
+    unsafe { 
+        return_vector = return_string.as_mut_vec().to_owned(); 
+    }
+
+    return_vector.append(&mut file_bytes);
+    return_vector.to_owned()
 }
 
 // Function that reads and interprets an HTTP 1.1 request.
@@ -113,7 +129,7 @@ fn read_request(stream: TcpStream) {
                     
                     // Static files data
 
-                    "/"             => ("static/html/main.html",true),
+                    "/"             => ("static/html/main.html.gz",true),
                     "/main.css"     => ("static/css/main.css",  true),
                     "/main.js"      => ("static/js/main.js",    true),
                     "/favicon.ico"  => ("static/html/404.html", true),
@@ -170,9 +186,9 @@ fn read_request(stream: TcpStream) {
 
 fn write_response(mut stream: TcpStream, input:&str, is_file: bool) {
     if is_file {
-        stream.write_all(get_file_string(input, true).as_bytes()).unwrap();
+        stream.write_all(get_file_bytes(input, true).as_slice()).unwrap();
     } else {
-        stream.write(get_template(input).as_bytes()).unwrap();
+        stream.write_all(get_template(input).as_bytes()).unwrap();
     }
     stream.flush().expect("Could not flush stream!");
 }
@@ -217,7 +233,7 @@ fn get_template(input: &str) -> String {
         "mosc"  => "Москва (Moscow)",
         "tok"   => "東京 (Tokyo)",
         "mars"   => "Mars (MTC)",
-        _       => "somewhere over the rainbox"
+        _       => "somewhere"
     };
 
     // get the template file, add headers
@@ -227,7 +243,7 @@ fn get_template(input: &str) -> String {
     return_string.push_str("HTTP/1.1 200 OK\r\n");
     return_string.push_str("Content-Length: ");
     if !is_xml {
-        template = get_file_string("static/html/template.html", false);
+        template = String::from_utf8(get_file_bytes("static/html/template.html", false).to_owned()).unwrap();
         template = template.replace("{{title}}", &title);
         template = template.replace("{{country}}", &input);
         template = template.replace("{{time}}", &result);
